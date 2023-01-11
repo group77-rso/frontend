@@ -4,6 +4,7 @@ import {Badge, Button, Grid, Spacer, Table, Text, Tooltip} from "@nextui-org/rea
 import {AiFillEye} from "react-icons/ai"
 import {Navigate} from "react-router-dom"
 import {Category, getAllCategoriesCall} from "../../api/categories"
+import {scraperScrapeEndpoint} from "../../constants/api";
 
 type Props = {
     title: string;
@@ -51,7 +52,7 @@ export default function Categories({title}: Props) {
             case "name":
                 return <Text b>{item[columnKey]}</Text>
             case "action":
-                return <Button onClick={() => setSelectedMerchant(item[columnKey])} icon={<AiFillEye fill="currentColor"/>}>Obišči kategorijo</Button>
+                return <><Button color="success" onClick={() => setSelectedMerchant(item[columnKey])} icon={<AiFillEye fill="currentColor"/>}>Obišči kategorijo</Button></>
         }
 
         return <Text>{item[columnKey]}</Text>
@@ -59,11 +60,21 @@ export default function Categories({title}: Props) {
 
     console.log(rows)
 
+    const doTheScrape = () => {
+        fetch(scraperScrapeEndpoint)
+    }
+
     return (<>
             <PageHeader mainTitle={title} buttons={[]}/>
 
             {selectedMerchant !== null ? <Navigate to={selectedMerchant.toString()} /> : null}
             {/*{ <Alert error={ error } action={ ActionType.GetAllCustomers }/> }*/}
+
+            <Button
+                color="error"
+                onClick={() => doTheScrape()}
+            >Izvedi scrape novih cen</Button>
+            <Spacer></Spacer>
 
             <Table
                 aria-label="Example table with dynamic content"

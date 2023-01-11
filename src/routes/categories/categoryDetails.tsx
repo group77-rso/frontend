@@ -15,6 +15,8 @@ export default function CategoryDetails() {
     const [prices, setPrices] = useState<Map<number, Array<Price>>>(new Map<number, Array<Price>>())
     const [names, setNames] = useState<Map<number, string>>(new Map<number, string>())
     const [error, setError] = useState<any | null>(null)
+    const [currency, setCurrency] = useState<string>("EUR")
+    const [currencyLoading, setCurrencyLoading] = useState<boolean>(false)
 
     const pageTitle = categoryDetail == null ? "Podrobnosti kategorije" : `Kategorija: ${ categoryDetail.name }`
 
@@ -109,16 +111,16 @@ export default function CategoryDetails() {
             case "name":
                 return <Text b>{item[columnKey]}</Text>
             case "mercator":
-                if (item[columnKey] !== null) return <Text  css={ { textAlign: "end" } }>{item[columnKey]} €</Text>
+                if (item[columnKey] !== null) return <Text  css={ { textAlign: "end" } }>{item[columnKey]} {currency}</Text>
                 return <Text css={ { textAlign: "end" } }>----</Text>
             case "spar":
-                if (item[columnKey] !== null) return <Text  css={ { textAlign: "end" } }>{item[columnKey]} €</Text>
+                if (item[columnKey] !== null) return <Text  css={ { textAlign: "end" } }>{item[columnKey]} {currency}</Text>
                 return <Text css={ { textAlign: "end" } }>----</Text>
             case "jager":
-                if (item[columnKey] !== null) return <Text  css={ { textAlign: "end" } }>{item[columnKey]} €</Text>
+                if (item[columnKey] !== null) return <Text  css={ { textAlign: "end" } }>{item[columnKey]} {currency}</Text>
                 return <Text css={ { textAlign: "end" } }>----</Text>
             case "action":
-                return <Button  css={ { textAlign: "end" } } icon={<AiFillEye fill="currentColor"/>}>Poglej podrobnosti</Button>
+                return <Button  css={ { textAlign: "end", marginLeft: "20px"} } icon={<AiFillEye fill="currentColor"/>}>Poglej podrobnosti</Button>
         }
 
         return <Text>{item[columnKey]}</Text>
@@ -149,13 +151,54 @@ export default function CategoryDetails() {
         </Table>
     </>
 
+    const changeCurrency = (curr: string) => {
+        setCurrency(curr)
+        setCurrencyLoading(true)
+        if (categoryDetail === null) return
+        const urls = categoryDetail.products.map((product: Product) => fetch(getPricesEndpoint + "/" + product.productId + (currency === "EUR" ? "" : "?want=" + curr)))
+        Promise.all(urls).then(async (responses) => {
+            const parsedResponses = await Promise.all(responses.map(async res => await res.json()));
+            let allPrices = new Map<number, Array<Price>>();
+            let allNames = new Map<number, string>();
+            parsedResponses.forEach((res: Prices) => {
+                allPrices.set(res.product.productId, res.prices)
+                allNames.set(res.product.productId, res.product.name)
+            })
+            setPrices(allPrices)
+            setNames(allNames)
+            setCurrencyLoading(false)
+        })
+    }
+
+    const currencyButtons = <>
+        Izberite željeno valuto za prikaz cen:
+        <Grid.Container gap={2}>
+            <Button color={"primary"} bordered={!(currency === "EUR")} size={"sm"} onClick={() => changeCurrency("EUR")} auto>
+                EUR
+            </Button>
+            <Button color={"primary"} bordered={!(currency === "USD")} size={"sm"} onClick={() => changeCurrency("USD")} auto>
+                USD
+            </Button>
+            <Button color={"primary"} bordered={!(currency === "RUB")} size={"sm"} onClick={() => changeCurrency("RUB")} auto>
+                RUB
+            </Button>
+            <Button color={"primary"} bordered={!(currency === "JPY")} size={"sm"} onClick={() => changeCurrency("JPY")} auto>
+                JPY
+            </Button>
+
+        </Grid.Container>
+        <Spacer />
+    </>
+
     return (<>
         <PageHeader mainTitle={ pageTitle } buttons={ [] }/>
         {/*<Alert action={ ActionType.GetInvoiceDetails } error={ error }/>*/}
         <Text>{error}</Text>
+        {categoryDetail == null ? null : currencyButtons}
+
         {categoryDetail == null && error == null ? loading : null}
 
-        { categoryDetail != null ? basicDetails : null }
+        { (categoryDetail != null && !currencyLoading) ? basicDetails : <Loading /> }
 
     </>)
 }
