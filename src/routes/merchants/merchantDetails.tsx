@@ -1,4 +1,4 @@
-import {Navigate, useParams} from "react-router-dom"
+import { useParams } from "react-router-dom"
 import PageHeader from "../../components/PageHeader"
 import React, {Key, useEffect, useState} from "react"
 import {getCategoryItems, Category, CategoryDetail, Product} from "../../api/categories"
@@ -8,7 +8,7 @@ import {getPricesForProduct, Price, Prices} from "../../api/prices";
 import {getPricesEndpoint} from "../../constants/api";
 import {AiFillEye} from "react-icons/ai";
 
-export default function CategoryDetails() {
+export default function MerchantDetails() {
     let params = useParams()
 
     const [categoryDetail, setCategoryDetail] = useState<CategoryDetail | null>(null)
@@ -16,7 +16,6 @@ export default function CategoryDetails() {
     const [names, setNames] = useState<Map<number, string>>(new Map<number, string>())
     const [error, setError] = useState<any | null>(null)
     const [currency, setCurrency] = useState<string>("EUR")
-    const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
     const [currencyLoading, setCurrencyLoading] = useState<boolean>(false)
 
     const pageTitle = categoryDetail == null ? "Podrobnosti kategorije" : `Kategorija: ${ categoryDetail.name }`
@@ -121,7 +120,7 @@ export default function CategoryDetails() {
                 if (item[columnKey] !== null) return <Text  css={ { textAlign: "end" } }>{item[columnKey]} {currency}</Text>
                 return <Text css={ { textAlign: "end" } }>----</Text>
             case "action":
-                return <Button onClick={() => setSelectedProduct(item["key"])} css={ { textAlign: "end", marginLeft: "20px"} } icon={<AiFillEye fill="currentColor"/>}>Poglej podrobnosti</Button>
+                return <Button  css={ { textAlign: "end", marginLeft: "20px"} } icon={<AiFillEye fill="currentColor"/>}>Poglej podrobnosti</Button>
         }
 
         return <Text>{item[columnKey]}</Text>
@@ -196,8 +195,6 @@ export default function CategoryDetails() {
         {/*<Alert action={ ActionType.GetInvoiceDetails } error={ error }/>*/}
         <Text>{error}</Text>
         {categoryDetail == null ? null : currencyButtons}
-
-        {selectedProduct != null ? <Navigate to={"../../products/" + selectedProduct} /> : null}
 
         {categoryDetail == null && error == null ? loading : null}
 

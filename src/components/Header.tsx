@@ -29,6 +29,11 @@ export default function Header() {
                 key={"categories"} className={"nav-item"} to={"categories"} onClick={() => setSelected("categories")}
                 isActive={"categories" === selected} isDisabled={"categories" === selected}
             >Kategorije</Navbar.Link>
+            <Navbar.Link
+                as={Link}
+                key={"merchants"} className={"nav-item"} to={"merchants"} onClick={() => setSelected("merchants")}
+                isActive={"merchants" === selected} isDisabled={"merchants" === selected}
+            >Trgovci</Navbar.Link>
         </Navbar.Content>
         <Navbar.Content>
             <UserDisplay

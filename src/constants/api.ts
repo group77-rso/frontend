@@ -29,4 +29,7 @@ const scraperScrapeEndpointK8S = `${ SCRAPER }/${ API_VERSION }/scraper/scrape`
 const scraperScrapeEndpointLocal = `${ API_URL_SCRAPER }/${ API_VERSION }/scraper/scrape`
 export const scraperScrapeEndpoint = IS_LOCAL ? scraperScrapeEndpointLocal : scraperScrapeEndpointK8S
 
-
+// MERCHANTS GRAPHQL
+const merchantsGraphQLK8S = `${ MERCHANTS }/graphql`
+const merchantsGraphQLLocal = `${ API_URL_MERCHANTS }/graphql`
+export const merchantsGraphQL = IS_LOCAL ? merchantsGraphQLLocal : merchantsGraphQLK8S
