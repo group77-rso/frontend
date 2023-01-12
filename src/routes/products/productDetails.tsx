@@ -81,7 +81,7 @@ export default function ProductDetails() {
                 <Spacer />
             <Text h3>{price.merchant}</Text>
             <Text b>Cena izdelka:</Text>
-            <Text>{price.price}</Text>
+            <Text>{price.price} €</Text>
 
             <Text b>Povezava do izdelka izdelka:&nbsp;</Text>
             <Link color="success" href={price.productLink}>&nbsp;{price.productLink}</Link>

@@ -29,7 +29,7 @@ export default function Merchants({title}: Props) {
         myHeaders.append("Content-Type", "application/json");
 
         var graphql = JSON.stringify({
-            query: "que{ry {\r\n  merchants {\r\n    name\r\n    merchantId\r\n  }\r\n}",
+            query: "query {\r\n  merchants {\r\n    name\r\n    merchantId\r\n  }\r\n}",
             variables: {}
         })
 
@@ -92,11 +92,11 @@ export default function Merchants({title}: Props) {
             {selectedMerchant !== null ? <Navigate to={selectedMerchant.toString()} /> : null}
             {/*{ <Alert error={ error } action={ ActionType.GetAllCustomers }/> }*/}
 
-            <Button
-                color="error"
-                onClick={() => doTheScrape()}
-            >Izvedi scrape novih cen</Button>
-            <Spacer></Spacer>
+            {/*<Button*/}
+            {/*    color="error"*/}
+            {/*    onClick={() => doTheScrape()}*/}
+            {/*>Izvedi scrape novih cen</Button>*/}
+            {/*<Spacer></Spacer>*/}
 
             <Table
                 aria-label="Example table with dynamic content"
